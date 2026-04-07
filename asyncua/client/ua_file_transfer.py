@@ -64,9 +64,9 @@ class UaFile:
         When a client closes a file the handle becomes invalid.
         """
         _logger.debug("Request to close file %s", self._file_node)
-        read_node = await self._file_node.get_child("Close")
+        close_node = await self._file_node.get_child("Close")
         arg1_file_handle = Variant(self._file_handle, VariantType.UInt32)
-        await self._file_node.call_method(read_node, arg1_file_handle)
+        await self._file_node.call_method(close_node, arg1_file_handle)
 
     async def read(self) -> bytes:
         """
@@ -234,7 +234,11 @@ class UaDirectory:
         await self._directory_node.call_method(delete_node, object_to_delete)
 
     async def move_or_copy(
-        self, object_to_move_or_copy: NodeId, target_directory: NodeId, create_copy: bool, new_name: str
+        self,
+        object_to_move_or_copy: NodeId,
+        target_directory: NodeId,
+        create_copy: bool,
+        new_name: str,
     ) -> NodeId:
         """
         MoveOrCopy is used to move or copy a file or directory organized by this Object
@@ -263,5 +267,9 @@ class UaDirectory:
         arg3_create_copy = Variant(create_copy, VariantType.Boolean)
         arg4_new_name = Variant(new_name, VariantType.String)
         return await self._directory_node.call_method(
-            move_or_copy_node, object_to_move_or_copy, target_directory, arg3_create_copy, arg4_new_name
+            move_or_copy_node,
+            object_to_move_or_copy,
+            target_directory,
+            arg3_create_copy,
+            arg4_new_name,
         )
